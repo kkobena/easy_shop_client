@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.text.Font?>
+<Label  prefHeight="17.0" prefWidth="143.0" styleClass="menu_item_label" text="Gestion des ventes">
+    <graphic>
+        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@images/basket.png" />
+            </image>
+        </ImageView>
+    </graphic>
+    <font>
+        <Font size="13.0" />
+    </font>
+</Label>
