@@ -1,7 +1,10 @@
 package com.kobe.warehouse.easy_shop_client;
 
 import com.kobe.warehouse.easy_shop_client.config.ApplicationConfigurer;
+import com.kobe.warehouse.easy_shop_client.http.request.SaleQueryParams;
+import com.kobe.warehouse.easy_shop_client.http.response.Pageable;
 import com.kobe.warehouse.easy_shop_client.http.response.UserInfo;
+import com.kobe.warehouse.easy_shop_client.http.response.sale.Sale;
 import com.kobe.warehouse.easy_shop_client.http.service.sale.SaleService;
 import com.kobe.warehouse.easy_shop_client.http.service.sale.SaleServiceImpl;
 import com.kobe.warehouse.easy_shop_client.http.service.user.Mock;
@@ -14,9 +17,14 @@ import com.kobe.warehouse.easy_shop_client.view_model.layout.sale.CommonRightVie
 import com.kobe.warehouse.easy_shop_client.view_model.layout.sale.CommonTopView;
 import com.kobe.warehouse.easy_shop_client.view_model.produit.Produit;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
+
+import com.kobe.warehouse.easy_shop_client.view_model.sale.SaleModel;
+import com.kobe.warehouse.easy_shop_client.view_model.utils.SaleConverter;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -35,7 +43,7 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 
 public class MainController implements Initializable {
   private final Logger log = Logger.getLogger(this.getClass().getName());
-  private final UserService userService;
+ // private final UserService userService;
   private final MenuService menuService;
   private AtomicInteger counter = new AtomicInteger(0);
   private double dividerPosition;
@@ -65,8 +73,8 @@ public class MainController implements Initializable {
 
   public MainController() {
     //  userService = new Mock();
-    userService = new UserServiceImpl(); // a supprimer apres le menu login
-    userService.authenticate("admin","admin");
+   // userService = new UserServiceImpl(); // a supprimer apres le menu login
+
 
     menuService = new MockMenu();
     iconL = new FontIcon(MaterialDesignA.ARROW_LEFT_CIRCLE_OUTLINE.getDescription());
@@ -79,16 +87,15 @@ public class MainController implements Initializable {
 
   @FXML
   protected void onToggleMenu(ActionEvent event) {
-    /* SaleQueryParams queryParams = new SaleQueryParams();
-    queryParams.setFromDate(LocalDate.now().minusMonths(5));
+   /*  SaleQueryParams queryParams = new SaleQueryParams();
+    queryParams.setFromDate(LocalDate.now().minusDays(1));
     queryParams.setToDate(LocalDate.now());
     queryParams.setSize(10);
-    List<SaleModel> sales =
-        saleService.fetch(queryParams).stream()
-            .map(SaleConverter.convertSaleToModel::apply)
-            .toList();
+      Pageable<Sale> sales =
+        saleService.fetchPageble(queryParams);
+    System.err.println(sales.total());*/
 
-    try {
+  /*  try {
       List<Sale> fromModel = sales.stream().map(SaleConverter.convertModelToSale::apply).toList();
 
       CashSaleModel cashSaleModel = saleService.create((CashSaleModel) sales.get(0));
@@ -160,13 +167,6 @@ public class MainController implements Initializable {
     }
   }*/
 
-  private void changed(
-      ObservableValue<? extends Produit> observableObjectValue,
-      Produit oldValue,
-      Produit newValue) {
-    System.out.print("Counter changed: ");
-    System.out.println("Old = " + oldValue + ", new = " + newValue);
-  }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {

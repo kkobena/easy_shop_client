@@ -48,7 +48,7 @@ public class CommonRightView implements Builder<VBox> {
     ComboBox<NatureVente> natureVenteComboBox =
         new NatureVenteCombo(this.selectedNatureVente).build();
     Panel paneluserCombo = new Panel();
-    VBox.setVgrow(paneluserCombo, Priority.ALWAYS);
+    VBox.setVgrow(paneluserCombo, Priority.NEVER);
     paneluserCombo.getStyleClass().add("panel-default");
 
     // paneluserCombo.getStyleClass().add("panel-primary");
@@ -57,14 +57,15 @@ public class CommonRightView implements Builder<VBox> {
     userComboBox.setPrefSize(270, 30);
     paneluserCombo.setBody(userComboBox);
     Panel panelTypePrescriptionCombo = new Panel();
-    VBox.setVgrow(panelTypePrescriptionCombo, Priority.ALWAYS);
+    VBox.setVgrow(panelTypePrescriptionCombo, Priority.NEVER);
     panelTypePrescriptionCombo.getStyleClass().add("panel-default");
     //  panelTypePrescriptionCombo.setPadding(new Insets(5));
     panelTypePrescriptionCombo.setText("Nature vente");
     this.typePrescriptionComboBox.setPrefSize(270, 30);
     panelTypePrescriptionCombo.setBody(typePrescriptionComboBox);
     Panel panelNatureVenteComboBox = new Panel();
-    VBox.setVgrow(panelNatureVenteComboBox, Priority.ALWAYS);
+    VBox.setVgrow(panelNatureVenteComboBox, Priority.NEVER);
+
 
     panelNatureVenteComboBox.getStyleClass().add("panel-default");
     // panelNatureVenteComboBox.setPadding(new Insets(5));
@@ -76,7 +77,7 @@ public class CommonRightView implements Builder<VBox> {
     remiseComboBox.setPromptText("Veuillez selectionner une remise");
     this.selectedRemise.bind(remiseComboBox.getSelectionModel().selectedItemProperty());
     Panel panelRemise = new Panel();
-    VBox.setVgrow(panelRemise, Priority.ALWAYS);
+    VBox.setVgrow(panelRemise, Priority.NEVER);
     panelRemise.getStyleClass().add("panel-default");
 
     // paneluserCombo.getStyleClass().add("panel-primary");

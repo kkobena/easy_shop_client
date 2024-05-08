@@ -1,5 +1,8 @@
 package com.kobe.warehouse.easy_shop_client;
 
+import com.kobe.warehouse.easy_shop_client.config.ApplicationConfigurer;
+import com.kobe.warehouse.easy_shop_client.view_model.login.Login;
+import com.kobe.warehouse.easy_shop_client.view_model.utils.Formater;
 import com.kobe.warehouse.easy_shop_client.view_model.utils.MenuRegistry;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -39,10 +42,27 @@ public class MainApplication extends Application {
     // Screen screen=Screen.getPrimary();
     //    button.getStyleClass().setAll("btn","btn-danger");
     stage.setTitle("Easy");
-
+    stage.initStyle(StageStyle.DECORATED);
     stage.setScene(scene);
+    stage.show();
+    /* if (ApplicationConfigurer.currentUser.getValue() == null) {
+      Login login = new Login();
+      login.start(new Stage());
+    } else {
+      // this.show(stage, new Label("Easy"), StageStyle.DECORATED);
+    }
+    ApplicationConfigurer.currentUser.addListener(
+        (observable, oldValue, newValue) -> {
+          if (newValue != null) {
+            stage.show();
+          } else {
+            Login login = new Login();
+            login.start(new Stage());
+          }
+        });*/
 
-    this.show(stage, new Label("Easy"), StageStyle.DECORATED);
+    /// this.show(stage, new Label("Easy"), StageStyle.DECORATED);
+
   }
 
   public static void main(String[] args) {
@@ -54,7 +74,7 @@ public class MainApplication extends Application {
     // Set the text for the label to match the style
     styleLabel.setText(style.toString());
     // Set the style
-    stage.initStyle(style);
+
     // For a transparent style, set the scene fill to null.
     // Otherwise, the content area will have the default white
     // background of the scene.

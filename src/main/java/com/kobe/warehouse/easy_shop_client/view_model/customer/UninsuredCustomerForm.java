@@ -1,7 +1,11 @@
 package com.kobe.warehouse.easy_shop_client.view_model.customer;
 
+import com.kobe.warehouse.easy_shop_client.config.ApplicationConfigurer;
+import com.kobe.warehouse.easy_shop_client.http.error.RemoteException;
+import com.kobe.warehouse.easy_shop_client.http.error.ServerException;
 import com.kobe.warehouse.easy_shop_client.http.service.customer.UninsuredCustomerService;
 import com.kobe.warehouse.easy_shop_client.http.service.customer.UninsuredCustomerServiceImpl;
+import com.kobe.warehouse.easy_shop_client.view_model.control.alert.ErrorAlert;
 import com.kobe.warehouse.easy_shop_client.view_model.control.button.Add;
 import com.kobe.warehouse.easy_shop_client.view_model.control.button.ButtonUtils;
 import com.kobe.warehouse.easy_shop_client.view_model.control.button.Constant;
@@ -31,8 +35,19 @@ public class UninsuredCustomerForm extends Dialog<UninsuredCustomer> {
     this.uninsuredCustomerService = new UninsuredCustomerServiceImpl();
     CustomProgress customProgress = new CustomProgress();
     customProgress.setVisible(false);
-
     isSave.addListener((observable, oldValue, newValue) -> customProgress.setVisible(newValue));
+
+    ApplicationConfigurer.remoteException.addListener(
+        (observable, oldValue, newValue) -> {
+          customProgress.setVisible(false);
+          new ErrorAlert();
+        });
+    ApplicationConfigurer.serverException.addListener(
+        (observable, oldValue, newValue) -> {
+          customProgress.setVisible(false);
+          new ErrorAlert();
+        });
+
     initModality(Modality.APPLICATION_MODAL);
     initStyle(StageStyle.UTILITY);
     if (Objects.isNull(uninsuredCustomer)) {
@@ -140,16 +155,30 @@ public class UninsuredCustomerForm extends Dialog<UninsuredCustomer> {
             populateUninsuredCustomer(
                 firstName.getText(), lastName.getText(), email.getText(), phone.getText());
 
-            this.uninsuredCustomer = post(this.uninsuredCustomer);
+            try {
+              this.uninsuredCustomer = post(this.uninsuredCustomer);
+              setResult(this.uninsuredCustomer);
+            } catch (RemoteException | ServerException e) {
+
+            }
+
           } else {
             populateUninsuredCustomer(
                 firstName.getText(), lastName.getText(), email.getText(), phone.getText());
-            this.uninsuredCustomer = this.put(this.uninsuredCustomer);
+            try {
+              this.uninsuredCustomer = this.put(this.uninsuredCustomer);
+              setResult(this.uninsuredCustomer);
+            } catch (RemoteException | ServerException e) {
+              if (e instanceof RemoteException) {
+                ApplicationConfigurer.remoteException.setValue((RemoteException) e);
+              } else {
+                ApplicationConfigurer.serverException.setValue((ServerException) e);
+              }
+            }
           }
 
           //  isSave.set(false);
 
-          setResult(this.uninsuredCustomer);
           event.consume();
         });
 

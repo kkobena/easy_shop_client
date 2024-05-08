@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -13,15 +12,13 @@ import com.kobe.warehouse.easy_shop_client.config.Restconfigurer;
 import com.kobe.warehouse.easy_shop_client.http.error.RemoteException;
 import com.kobe.warehouse.easy_shop_client.http.error.ServerException;
 import com.kobe.warehouse.easy_shop_client.http.request.EasyShopHttpRequest;
-import com.kobe.warehouse.easy_shop_client.http.request.ManagedUser;
 import com.kobe.warehouse.easy_shop_client.http.request.QueryParams;
-import com.kobe.warehouse.easy_shop_client.http.request.RequestBody;
+import com.kobe.warehouse.easy_shop_client.http.response.Pageable;
 import com.kobe.warehouse.easy_shop_client.http.response.UserInfo;
 import java.io.IOException;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
@@ -82,6 +79,19 @@ public class HttpServiceImpl<T> implements HttpService<T> {
     return sendRequest(httpRequest, retour);
   }
 
+  @Override
+  public <R> R put(EasyShopHttpRequest param, Class<R> retour)
+      throws RemoteException, ServerException {
+    HttpRequest httpRequest =
+        requestBuilder
+            .uri(URI.create(ApplicationConfigurer.HOST + param.getEndPoint()))
+            .header("Content-Type", "application/json")
+            .PUT(HttpRequest.BodyPublishers.ofString(toJson(param.getBody())))
+            .build();
+
+    return sendRequest(httpRequest, retour);
+  }
+
   public void deleteRequest(EasyShopHttpRequest param) {
     HttpRequest httpRequest =
         requestBuilder
@@ -119,6 +129,7 @@ public class HttpServiceImpl<T> implements HttpService<T> {
 
       HttpResponse<String> response =
           httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+      response.headers().map().forEach((k, v) -> System.err.println(k + " : " + v));
       if (hasError(Method.getFrom(httpRequest), response.statusCode())) {
 
         throw new RuntimeException(response.toString());
@@ -191,6 +202,22 @@ public class HttpServiceImpl<T> implements HttpService<T> {
     return sendAndReturnList(httpRequest);
   }
 
+  @Override
+  public Pageable<T> fetchWithPagination(EasyShopHttpRequest param) {
+
+    HttpRequest httpRequest =
+        requestBuilder
+            .uri(
+                URI.create(
+                    ApplicationConfigurer.HOST
+                        + param.getEndPoint()
+                        + buildQueryParams(param.getQueryParams())))
+            .GET()
+            .build();
+
+    return sendAndReturnPageable(httpRequest);
+  }
+
   private String toJson(Object body) {
 
     try {
@@ -214,6 +241,26 @@ public class HttpServiceImpl<T> implements HttpService<T> {
 
       throw new RuntimeException(e);
     }
+  }
+
+  private Pageable<T> getAsPageableJson(HttpResponse<String> response) {
+
+    try {
+      // return objectMapper.readValue(responseBody, new TypeReference<>(){});
+      return new Pageable<>(
+          getTotal(response.headers()),
+          objectMapper.readValue(
+              response.body(),
+              objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, type)));
+    } catch (JsonProcessingException e) {
+
+      throw new RuntimeException(e);
+    }
+  }
+
+  private int getTotal(HttpHeaders headers) {
+
+    return Integer.valueOf(headers.map().get(ApplicationConfigurer.HEADER_X_TOTAL_COUNT).get(0));
   }
 
   private T parseJson(String responseBody) {
@@ -257,6 +304,22 @@ public class HttpServiceImpl<T> implements HttpService<T> {
     }
   }
 
+  private Pageable<T> sendAndReturnPageable(HttpRequest httpRequest) {
+    try {
+
+      HttpResponse<String> response =
+          httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+      if (hasError(Method.getFrom(httpRequest), response.statusCode())) {
+        log.log(Level.INFO, response.toString());
+        throw new RuntimeException(response.toString());
+      }
+      return getAsPageableJson(response);
+    } catch (IOException | InterruptedException e) {
+      log.log(Level.SEVERE, null, e);
+      throw new RuntimeException(e);
+    }
+  }
+
   @Override
   public void authenticate(String login, String password) {
 
@@ -272,7 +335,7 @@ public class HttpServiceImpl<T> implements HttpService<T> {
       ApplicationConfigurer.currentUser.setValue(
           objectMapper.readValue(response.body(), UserInfo.class));
     } catch (IOException | InterruptedException e) {
-      log.log(Level.SEVERE, null, e);
+      log.log(Level.INFO, null, e);
       throw new RuntimeException(e);
     }
   }

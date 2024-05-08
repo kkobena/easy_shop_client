@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.kobe.warehouse.easy_shop_client.view_model.NatureVente;
 import com.kobe.warehouse.easy_shop_client.view_model.TypePrescription;
 import com.kobe.warehouse.easy_shop_client.view_model.sale.Payment;
+import com.kobe.warehouse.easy_shop_client.view_model.sale.SaleLineModel;
 import com.kobe.warehouse.easy_shop_client.view_model.user.User;
 import com.kobe.warehouse.easy_shop_client.view_model.utils.SalesStatut;
 import java.io.Serializable;
@@ -30,7 +31,7 @@ public class Sale implements Serializable {
   private SalesStatut statut;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
-  private List<SaleLine> salesLines = new ArrayList<>();
+  private List<SaleLineModel> salesLines = new ArrayList<>();
   private List<Payment> payments = new ArrayList<>();
   private Sale canceledSale;
   private LocalDateTime effectiveUpdateDate;
@@ -164,11 +165,11 @@ public class Sale implements Serializable {
     this.updatedAt = updatedAt;
   }
 
-  public List<SaleLine> getSalesLines() {
+  public List<SaleLineModel> getSalesLines() {
     return salesLines;
   }
 
-  public void setSalesLines(List<SaleLine> salesLines) {
+  public void setSalesLines(List<SaleLineModel> salesLines) {
     this.salesLines = salesLines;
   }
 

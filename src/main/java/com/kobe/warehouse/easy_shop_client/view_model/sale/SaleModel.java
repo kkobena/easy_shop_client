@@ -52,7 +52,7 @@ public abstract class SaleModel {
   protected ObjectProperty<User> cassier = new SimpleObjectProperty<>(this, "cassier");
   protected ObjectProperty<User> seller = new SimpleObjectProperty<>(this, "seller");
   // private List<SaleLineDTO> salesLines = new ArrayList<>();
-  protected ListProperty<SaleLine> salesLines =
+  protected ListProperty<SaleLineModel> salesLines =
       new SimpleListProperty<>(this, "salesLines", FXCollections.observableArrayList());
 
   public long getId() {
@@ -67,15 +67,15 @@ public abstract class SaleModel {
     this.id.set(id);
   }
 
-  public ObservableList<SaleLine> getSalesLines() {
+  public ObservableList<SaleLineModel> getSalesLines() {
     return salesLines.get();
   }
 
-  public ListProperty<SaleLine> salesLinesProperty() {
+  public ListProperty<SaleLineModel> salesLinesProperty() {
     return salesLines;
   }
 
-  public void setSalesLines(ObservableList<SaleLine> salesLines) {
+  public void setSalesLines(ObservableList<SaleLineModel> salesLines) {
     this.salesLines.set(salesLines);
   }
 

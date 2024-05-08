@@ -30,7 +30,9 @@ public class UninsuredCustomerServiceImpl implements UninsuredCustomerService {
         return new ArrayList<>();
       }
       return this.httpService.fetch(
-          new EasyShopHttpRequest().setEndPoint(endPoint).setQueryParams(queryParams.setType("STANDARD")));
+          new EasyShopHttpRequest()
+              .setEndPoint(endPoint)
+              .setQueryParams(queryParams.setType("STANDARD")));
     } catch (Exception e) {
       log.log(Level.SEVERE, null, e);
       return new ArrayList<>();
@@ -39,11 +41,15 @@ public class UninsuredCustomerServiceImpl implements UninsuredCustomerService {
 
   @Override
   public UninsuredCustomer add(UninsuredCustomer uninsuredCustomer) {
-    return null;
+    return this.httpService.post(
+        new EasyShopHttpRequest().setEndPoint(endPoint).setBody(uninsuredCustomer),
+        UninsuredCustomer.class);
   }
 
   @Override
   public UninsuredCustomer update(UninsuredCustomer uninsuredCustomer) {
-    return null;
+    return this.httpService.put(
+        new EasyShopHttpRequest().setEndPoint(endPoint).setBody(uninsuredCustomer),
+        UninsuredCustomer.class);
   }
 }
