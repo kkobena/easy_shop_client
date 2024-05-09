@@ -4,7 +4,7 @@ module com.kobe.warehouse.easy_shop_client {
   requires javafx.web;
   requires javafx.fxml;
   requires org.controlsfx.controls;
-//  requires com.dlsc.formsfx;
+  //  requires com.dlsc.formsfx;
   requires net.synedra.validatorfx;
   requires org.kordamp.bootstrapfx.core;
   requires org.kordamp.ikonli.javafx;
@@ -19,7 +19,6 @@ module com.kobe.warehouse.easy_shop_client {
   requires javafx.graphics;
   requires com.fazecast.jSerialComm;
 
-
   exports com.kobe.warehouse.easy_shop_client.view_model;
   exports com.kobe.warehouse.easy_shop_client.view_model.customer;
   exports com.kobe.warehouse.easy_shop_client.view_model.produit;
@@ -31,6 +30,8 @@ module com.kobe.warehouse.easy_shop_client {
   exports com.kobe.warehouse.easy_shop_client.http.error;
   exports com.kobe.warehouse.easy_shop_client.http.response.sale;
   exports com.kobe.warehouse.easy_shop_client.http.response.referentiel;
+  exports com.kobe.warehouse.easy_shop_client.view_model.login;
+  exports com.kobe.warehouse.easy_shop_client.view_model.control.combo.experimental;
 
   opens com.kobe.warehouse.easy_shop_client to
       javafx.fxml;
@@ -50,6 +51,4 @@ module com.kobe.warehouse.easy_shop_client {
         com.fasterxml.jackson.databind;
   */
   exports com.kobe.warehouse.easy_shop_client;
-
-
 }

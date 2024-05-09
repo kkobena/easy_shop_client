@@ -17,4 +17,13 @@ public class Constant {
   public static final String LASTNAME= "Prénom(s):";
   public static final String PHONE= "Téléphone:";
   public static final String EMAIL= "Email:";
+  public static final String PRODUITS= "Produits";
+  public static final String PRODUITS_FILRER= "Taper pour filter les produits";
+  public static final String TOTAL_VENTE= "Total";
+  public static final String TOTAL_NET= "Montant net";
+  public static final String MONNAIE= "Monnaie";
+  public static final String DISCOUNT= "Remise";
+  public static final String TVA= "Tva";
+  public static final String BTN_TERMINER = "Terminer";
+  public static final String BTN_VENTE_EN_ATTENTE = "En attente";
 }

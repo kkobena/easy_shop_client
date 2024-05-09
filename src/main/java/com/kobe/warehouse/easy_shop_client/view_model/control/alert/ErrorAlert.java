@@ -1,7 +1,14 @@
 package com.kobe.warehouse.easy_shop_client.view_model.control.alert;
 
-public class ErrorAlert extends CustomAlert{
-    public ErrorAlert(AlertType alertType) {
-        super(alertType);
+import javafx.scene.control.Alert;
+
+public class ErrorAlert {
+    public ErrorAlert() {
+
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur");
+        alert.setHeaderText("L'enregistrement a échoué");
+        alert.setContentText("Veuillez vérifier vos saisies et réessayer");
+        alert.showAndWait();
     }
 }

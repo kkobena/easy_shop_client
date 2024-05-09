@@ -2,9 +2,11 @@ package com.kobe.warehouse.easy_shop_client.http.response.sale;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.kobe.warehouse.easy_shop_client.http.response.UserInfo;
 import com.kobe.warehouse.easy_shop_client.view_model.NatureVente;
 import com.kobe.warehouse.easy_shop_client.view_model.TypePrescription;
 import com.kobe.warehouse.easy_shop_client.view_model.sale.Payment;
+import com.kobe.warehouse.easy_shop_client.view_model.sale.SaleLineModel;
 import com.kobe.warehouse.easy_shop_client.view_model.user.User;
 import com.kobe.warehouse.easy_shop_client.view_model.utils.SalesStatut;
 import java.io.Serializable;
@@ -30,7 +32,7 @@ public class Sale implements Serializable {
   private SalesStatut statut;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
-  private List<SaleLine> salesLines = new ArrayList<>();
+  private List<SaleLineModel> salesLines = new ArrayList<>();
   private List<Payment> payments = new ArrayList<>();
   private Sale canceledSale;
   private LocalDateTime effectiveUpdateDate;
@@ -56,8 +58,8 @@ public class Sale implements Serializable {
   private int montantRendue;
   private NatureVente natureVente;
   private TypePrescription typePrescription;
-  private User cassier;
-  private User seller;
+  private UserInfo cassier;
+  private UserInfo seller;
   private Long cassierId;
   private Long sellerId;
   private String caisseEndNum;
@@ -164,11 +166,11 @@ public class Sale implements Serializable {
     this.updatedAt = updatedAt;
   }
 
-  public List<SaleLine> getSalesLines() {
+  public List<SaleLineModel> getSalesLines() {
     return salesLines;
   }
 
-  public void setSalesLines(List<SaleLine> salesLines) {
+  public void setSalesLines(List<SaleLineModel> salesLines) {
     this.salesLines = salesLines;
   }
 
@@ -372,19 +374,19 @@ public class Sale implements Serializable {
     this.typePrescription = typePrescription;
   }
 
-  public User getCassier() {
+  public UserInfo getCassier() {
     return cassier;
   }
 
-  public void setCassier(User cassier) {
+  public void setCassier(UserInfo cassier) {
     this.cassier = cassier;
   }
 
-  public User getSeller() {
+  public UserInfo getSeller() {
     return seller;
   }
 
-  public void setSeller(User seller) {
+  public void setSeller(UserInfo seller) {
     this.seller = seller;
   }
 

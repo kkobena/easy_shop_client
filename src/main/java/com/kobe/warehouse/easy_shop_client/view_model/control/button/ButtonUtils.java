@@ -69,4 +69,21 @@ public final class ButtonUtils {
         -fx-border-color: #ac2925;
         """
           + IN_LINE_STYLE_BASE;
+
+  public static final String IN_LINE_SM_BASE =
+      """
+     -fx-padding: 1px 5px 1px 5px;
+      -fx-font-size: 12px;
+      -fx-border-radius: 3px;
+      -fx-background-radius: 3px;
+        """;
+
+
+  public static final String IN_LINE_SM_DANGER =
+          """
+  -fx-text-fill: #fff;
+  -fx-fill: #fff;
+  -fx-background-color: #d9534f;
+  -fx-border-color: #d43f3a;
+            """;
 }

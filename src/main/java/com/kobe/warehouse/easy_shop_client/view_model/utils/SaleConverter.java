@@ -134,6 +134,7 @@ public final class SaleConverter {
     sale.setPayments(saleModel.getPayments());
     sale.setNumberTransaction(saleModel.getNumberTransaction());
     sale.setTypePrescription(saleModel.getTypePrescription());
+    sale.setNatureVente(saleModel.getNatureVente());
   }
 
   static CashSale updateCashSale(CashSaleModel saleModel) {
