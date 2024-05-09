@@ -42,20 +42,22 @@ public class CommonTopView implements Builder<HBox> {
   private final ObjectProperty<ControlFocus> controlFocus;
 
   public CommonTopView(
+      ObjectProperty<Produit> selectedProduit,
       SaleService saleService,
       ObjectProperty<SaleModel> currentSale,
       ObjectProperty<UserInfo> selectedUser,
       ObjectProperty<ControlFocus> controlFocus) {
+      this.selectedProduit = selectedProduit;
+      this.btnAddProduit.setId("btnAddProduit");
     this.saleService = saleService;
     this.currentSale = currentSale;
     this.controlFocus = controlFocus;
-    this.selectedProduit = new SimpleObjectProperty<>();
+
     this.selectedUser = selectedUser;
     this.selectedUser.addListener(this::onSelectUser);
-    this.btnAddProduit.setOnAction(event -> this.onValidateQuantity());
+
     this.controlFocus.addListener(
         (observable, oldValue, newValue) -> {
-
           switch (newValue.getInput()) {
             case PRODUIT_INPUT -> this.produitTextField.requestFocus();
             case PRODUIT_QTY -> this.produitQtyTxtField.requestFocus();
@@ -68,7 +70,7 @@ public class CommonTopView implements Builder<HBox> {
     this.hBox = new HBox();
     // this.hBox.setPrefWidth(Double.MAX_VALUE);
 
-   // this.hBox.getStyleClass().setAll("main_pane_content_item", "common_top_view");
+    // this.hBox.getStyleClass().setAll("main_pane_content_item", "common_top_view");
     ProduitControlBaseText produitText = new ProduitControlBaseText();
     Label qty = new Label("Qté:");
     qty.setPadding(new Insets(8, 0, 0, 0));
@@ -78,11 +80,12 @@ public class CommonTopView implements Builder<HBox> {
     HBox.setHgrow(qty, Priority.NEVER);
 
     this.produitQtyTxtField = new NumberTextField().build();
+    this.produitQtyTxtField.setId("produitQtyTxtField");
     this.produitQtyTxtField.setMaxWidth(130);
     this.produitQtyTxtField.setMinWidth(130);
     this.produitQtyTxtField.setMinHeight(35);
     this.produitQtyTxtField.getStyleClass().add("wr-input-text");
-    this.produitQtyTxtField.setOnKeyPressed(this::handleQuantityInput);
+   // this.produitQtyTxtField.setOnKeyPressed(this::handleQuantityInput);
 
     HBox.setHgrow(produitQtyTxtField, Priority.NEVER);
     qty.setLabelFor(this.produitQtyTxtField);
@@ -131,6 +134,7 @@ public class CommonTopView implements Builder<HBox> {
     HBox.setHgrow(produit, Priority.NEVER);
 
     this.produitTextField = produitText.build();
+    this.produitTextField.setId("produitTxtField");
     this.produitTextField.setPrefWidth(300);
     this.produitTextField.setMinHeight(35);
     this.produitTextField.getStyleClass().add("wr-input-text");
@@ -175,33 +179,8 @@ public class CommonTopView implements Builder<HBox> {
     }
   }
 
-  private void handleQuantityInput(KeyEvent e) {
-    if (e.getCode() == KeyCode.ENTER) {
-      onValidateQuantity();
-      /*  Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Validation Error");
-      alert.setHeaderText(null);
-      alert.contentTextProperty().bind(this.selectedProduit.map(Produit::getLibelle));
-      alert.showAndWait();*/
-      //  this.selectedProduit.setValue(null);
-
-    }
-
-    //  System.out.println(type + ": Key Code=" + keyCode.getName() + ", Text=" + e.getText());
-    /*  if (e.getEventType() == KeyEvent.KEY_PRESSED && e.getCode() == KeyCode.F1) {
 
 
-    }*/
-    //  e.consume();
-  }
-
-  private void onValidateQuantity() {
-    if (!this.produitQtyTxtField.getText().isEmpty()) {
-      this.produitQtyTxtField.setText(1 + "");
-      this.produitTextField.clear();
-      this.produitTextField.requestFocus();
-    }
-  }
 
   private void onSelectUser(
       ObservableValue<? extends UserInfo> prop, UserInfo oldValue, UserInfo newValue) {

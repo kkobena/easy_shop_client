@@ -2,6 +2,7 @@ package com.kobe.warehouse.easy_shop_client.view_model.sale;
 
 import java.time.LocalDateTime;
 
+import com.kobe.warehouse.easy_shop_client.http.response.UserInfo;
 import com.kobe.warehouse.easy_shop_client.http.response.sale.SaleLine;
 import com.kobe.warehouse.easy_shop_client.view_model.NatureVente;
 import com.kobe.warehouse.easy_shop_client.view_model.TypePrescription;
@@ -49,8 +50,8 @@ public abstract class SaleModel {
       new SimpleObjectProperty<>(this, "natureVente");
   protected ObjectProperty<TypePrescription> typePrescription =
       new SimpleObjectProperty<>(this, "typePrescription");
-  protected ObjectProperty<User> cassier = new SimpleObjectProperty<>(this, "cassier");
-  protected ObjectProperty<User> seller = new SimpleObjectProperty<>(this, "seller");
+  protected ObjectProperty<UserInfo> cassier = new SimpleObjectProperty<>(this, "cassier");
+  protected ObjectProperty<UserInfo> seller = new SimpleObjectProperty<>(this, "seller");
   // private List<SaleLineDTO> salesLines = new ArrayList<>();
   protected ListProperty<SaleLineModel> salesLines =
       new SimpleListProperty<>(this, "salesLines", FXCollections.observableArrayList());
@@ -439,27 +440,27 @@ public abstract class SaleModel {
     this.typePrescription.set(typePrescription);
   }
 
-  public User getCassier() {
+  public UserInfo getCassier() {
     return cassier.get();
   }
 
-  public ObjectProperty<User> cassierProperty() {
+  public ObjectProperty<UserInfo> cassierProperty() {
     return cassier;
   }
 
-  public void setCassier(User cassier) {
+  public void setCassier(UserInfo cassier) {
     this.cassier.set(cassier);
   }
 
-  public User getSeller() {
+  public UserInfo getSeller() {
     return seller.get();
   }
 
-  public ObjectProperty<User> sellerProperty() {
+  public ObjectProperty<UserInfo> sellerProperty() {
     return seller;
   }
 
-  public void setSeller(User seller) {
+  public void setSeller(UserInfo seller) {
     this.seller.set(seller);
   }
 }

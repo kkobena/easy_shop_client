@@ -9,6 +9,7 @@ import com.kobe.warehouse.easy_shop_client.view_model.control.button.Constant;
 import com.kobe.warehouse.easy_shop_client.view_model.sale.CashSaleModel;
 import com.kobe.warehouse.easy_shop_client.view_model.sale.SaleLineModel;
 import com.kobe.warehouse.easy_shop_client.view_model.sale.SaleModel;
+import com.kobe.warehouse.easy_shop_client.view_model.utils.Formater;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -24,6 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Builder;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -75,6 +77,7 @@ public class SaleItemTableView
 
     TableColumn<SaleLineModel, Integer> quantityRequestedColumn = new TableColumn<>("Qté.Demandée");
     quantityRequestedColumn.setPrefWidth(90);
+      quantityRequestedColumn.getStyleClass().setAll("number-column");
     quantityRequestedColumn.setCellValueFactory(
         cellData -> cellData.getValue().quantityRequestedProperty().asObject());
     quantityRequestedColumn.setCellFactory(
@@ -101,6 +104,7 @@ public class SaleItemTableView
         });
     TableColumn<SaleLineModel, Integer> quantitySoldColumn = new TableColumn<>("Qté.Servie");
     quantitySoldColumn.setPrefWidth(90);
+      quantitySoldColumn.getStyleClass().setAll("number-column");
     quantitySoldColumn.setCellValueFactory(
         cellData -> cellData.getValue().quantitySoldProperty().asObject());
     quantitySoldColumn.setCellFactory(
@@ -110,7 +114,7 @@ public class SaleItemTableView
           SaleLineModel saleLineModel = event.getRowValue();
           saleLineModel.setQuantitySold(event.getNewValue());
           try {
-            if (saleModelObjectProperty.getValue() instanceof CashSaleModel cashSaleModel) {
+            if (saleModelObjectProperty.getValue() instanceof CashSaleModel) {
               saleService.updateItemQtySold(saleLineModel);
             } else {
               saleService.updateItemQtySold(saleLineModel); // TODO : vente assurance
@@ -126,16 +130,62 @@ public class SaleItemTableView
         });
     TableColumn<SaleLineModel, Integer> unitPriceColumn = new TableColumn<>("Prix.Unitaire");
     unitPriceColumn.setPrefWidth(100);
+      unitPriceColumn.getStyleClass().setAll("number-column");
     unitPriceColumn.setCellValueFactory(
-        cellData -> cellData.getValue().regularUnitPriceProperty().asObject());
-    unitPriceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        cellData ->  cellData.getValue().regularUnitPriceProperty().asObject());
+  // unitPriceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+      unitPriceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<>() {
+          @Override
+          public String toString(Integer value) {
+              if (value == null) {
+                  return "";
+              }
+              // Format the integer as currency
+
+              return Formater.formatIntegerToXOF(value);
+          }
+
+          @Override
+          public Integer fromString(String string) {
+              if (string == null || string.isEmpty()) {
+                  return null;
+              }
+              // Remove the currency symbol and parse the string as an integer
+              String numberString = string.replace(" ", "");
+              return Integer.parseInt(numberString);
+          }
+      }));
+
+
+
+
+
+  /*    unitPriceColumn.setCellFactory(
+              column ->
+                      new TableCell<>() {
+                          @Override
+                          protected void updateItem(Integer item, boolean empty) {
+                              super.updateItem(item, empty);
+                              if (item == null || empty) {
+                                  setText(null);
+                                  setStyle("");
+                              } else {
+                                  setText(Formater.formatIntegerToXOF(item));
+                                  // Style all cells in this column, for example:
+                                  setStyle(
+                                          " -fx-alignment: CENTER-RIGHT ;"); // Change cell background color to yellow
+                              }
+                          }
+                      });
+    */
+
     unitPriceColumn.setOnEditCommit(
         event -> {
           SaleLineModel saleLineModel = event.getRowValue();
           saleLineModel.setRegularUnitPrice(event.getNewValue());
           SaleModel saleModel = saleModelObjectProperty.getValue();
           try {
-            if (saleModel instanceof CashSaleModel cashSaleModel) {
+            if (saleModel instanceof CashSaleModel) {
               saleService.updateItemPrice(saleLineModel);
 
             } else {
@@ -153,19 +203,30 @@ public class SaleItemTableView
           saleModelObjectProperty.set(saleService.findOne(saleModel.getId()));
         });
     TableColumn<SaleLineModel, Integer> totalColumn = new TableColumn<>("Total");
+      totalColumn.getStyleClass().setAll("number-column","total-column");
     totalColumn.setPrefWidth(90);
-    quantitySoldColumn.setCellValueFactory(
-        cellData ->
-            Bindings.createIntegerBinding(
-                    () ->
-                        cellData.getValue().getQuantitySold()
-                            * cellData.getValue().getRegularUnitPrice(),
-                    cellData.getValue().quantitySoldProperty(),
-                    cellData.getValue().regularUnitPriceProperty())
-                .asObject());
+    totalColumn.setCellFactory(
+        column ->
+            new TableCell<>() {
+              @Override
+              protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                  setText(null);
+                  setStyle("");
+                } else {
+                  setText(Formater.formatIntegerToXOF(item));
+                  // Style all cells in this column, for example:
+                  setStyle(
+                      " -fx-alignment: CENTER-RIGHT ;"); // Change cell background color to yellow
+                }
+              }
+            });
+    totalColumn.setCellValueFactory(
+        cellData -> cellData.getValue().salesAmountProperty().asObject());
 
     TableColumn<SaleLineModel, Void> actionColumn = new TableColumn<>("");
-    actionColumn.setPrefWidth(50);
+    actionColumn.setPrefWidth(100);
 
     Callback<TableColumn<SaleLineModel, Void>, TableCell<SaleLineModel, Void>> cellFactory =
         new Callback<>() {
@@ -249,7 +310,7 @@ public class SaleItemTableView
             actionColumn);
     tableView.setEditable(true);
     //
-    // this.tableView.itemsProperty().bind(this.saleModelObjectProperty.map(SaleModel::getSalesLines));
+    this.tableView.itemsProperty().bind(this.saleModelObjectProperty.map(SaleModel::getSalesLines));
 
     vBox.getChildren().setAll(buildSearchSegment(), tableView, pagination);
 
@@ -290,15 +351,17 @@ public class SaleItemTableView
   }*/
 
   private Button buildButton() {
-    Button button = new Button();
-    button.getStyleClass().setAll("btn", "btn-xs", "btn-danger");
+    Button button = new Button(Constant.BTN_DELETE);
+
+    button.getStyleClass().addAll("btn", "btn-xs", "btn-danger");
     FontIcon iconButtonBtn = new FontIcon(FontAwesomeSolid.TRASH);
+    button.setTooltip(new Tooltip(Constant.BTN_DELETE));
     iconButtonBtn.setIconSize(16);
     iconButtonBtn.setIconColor(Color.rgb(255, 255, 255));
     button.setGraphic(iconButtonBtn);
-    button.setStyle(ButtonUtils.IN_LINE_STYLE_INFO);
+    /*button.setStyle(ButtonUtils.IN_LINE_STYLE_INFO);
     button.setOnMouseEntered(e -> button.setStyle(ButtonUtils.IN_LINE_STYLE_INFO_HOVER));
-    button.setOnMouseExited(e -> button.setStyle(ButtonUtils.IN_LINE_STYLE_INFO));
+    button.setOnMouseExited(e -> button.setStyle(ButtonUtils.IN_LINE_STYLE_INFO));*/
     return button;
   }
 
@@ -348,7 +411,7 @@ public class SaleItemTableView
                     return false; // Does not match
                   });
             });
-    tableView.setItems(filteredList);
+    //  tableView.setItems(filteredList);
 
     //  hBox.getChildren().addAll( textField);
     return textField;

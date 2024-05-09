@@ -1,6 +1,7 @@
 package com.kobe.warehouse.easy_shop_client.view_model.control.combo;
 
 import com.kobe.warehouse.easy_shop_client.view_model.TypePrescription;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -13,13 +14,16 @@ import java.util.List;
 public class TypePrescriptionCombo implements Builder<ComboBox<TypePrescription>> {
 
   private final ComboBox<TypePrescription> comboBox;
+  private final ObjectProperty<TypePrescription> selectedTypePrescription;
 
-  public TypePrescriptionCombo() {
+  public TypePrescriptionCombo(ObjectProperty<TypePrescription> selectedTypePrescription) {
+    this.selectedTypePrescription = selectedTypePrescription;
 
     this.comboBox = new ComboBox<>();
     this.comboBox.getStyleClass().add("wr-combo");
     // this.userInfoComboBox.setEditable(true);
     List<TypePrescription> typePrescriptions = Arrays.stream(TypePrescription.values()).toList();
+    this.selectedTypePrescription.bind(this.comboBox.getSelectionModel().selectedItemProperty());
     this.comboBox.getItems().setAll(typePrescriptions);
     comboBox.setCellFactory(
         new Callback<>() {
@@ -41,7 +45,6 @@ public class TypePrescriptionCombo implements Builder<ComboBox<TypePrescription>
 
     comboBox.setButtonCell(comboBox.getCellFactory().call(null));
     comboBox.setValue(TypePrescription.PRESCRIPTION);
-
   }
 
   @Override

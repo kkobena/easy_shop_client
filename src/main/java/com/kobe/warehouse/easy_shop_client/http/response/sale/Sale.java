@@ -2,6 +2,7 @@ package com.kobe.warehouse.easy_shop_client.http.response.sale;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.kobe.warehouse.easy_shop_client.http.response.UserInfo;
 import com.kobe.warehouse.easy_shop_client.view_model.NatureVente;
 import com.kobe.warehouse.easy_shop_client.view_model.TypePrescription;
 import com.kobe.warehouse.easy_shop_client.view_model.sale.Payment;
@@ -57,8 +58,8 @@ public class Sale implements Serializable {
   private int montantRendue;
   private NatureVente natureVente;
   private TypePrescription typePrescription;
-  private User cassier;
-  private User seller;
+  private UserInfo cassier;
+  private UserInfo seller;
   private Long cassierId;
   private Long sellerId;
   private String caisseEndNum;
@@ -373,19 +374,19 @@ public class Sale implements Serializable {
     this.typePrescription = typePrescription;
   }
 
-  public User getCassier() {
+  public UserInfo getCassier() {
     return cassier;
   }
 
-  public void setCassier(User cassier) {
+  public void setCassier(UserInfo cassier) {
     this.cassier = cassier;
   }
 
-  public User getSeller() {
+  public UserInfo getSeller() {
     return seller;
   }
 
-  public void setSeller(User seller) {
+  public void setSeller(UserInfo seller) {
     this.seller = seller;
   }
 

@@ -32,7 +32,7 @@ public class ProduitServiceImpl implements ProduitService {
               .setEndPoint(endPointLite)
               .setQueryParams(new QueryParams().setSearch(search)));
     } catch (Exception e) {
-      log.log(Level.SEVERE, null, e);
+      log.log(Level.FINER, null, e);
       return new ArrayList<>();
     }
   }

@@ -303,11 +303,22 @@ ECCFC3 ECCFC3
     -fx-border-radius: 0, 0, 3px, 0;
 }
 
-.wr-input-text{
+.wr-input-text {
     -fx-font-size: 14px;
     -fx-font-weight: 700;
 }
-.wr-label{
+
+.wr-label {
     -fx-font-size: 13px;
+
+}
+
+.total-column {
+    -fx-font-weight: 700;
+    -fx-font-size: 13px;
+}
+
+.number-column {
+    -fx-alignment: CENTER-RIGHT;
 
 }
